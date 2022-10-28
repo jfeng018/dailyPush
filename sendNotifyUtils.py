@@ -64,9 +64,9 @@ if "PUSH_PLUS_TOKEN" in os.environ:
         PUSH_PLUS_TOKEN = os.environ["PUSH_PLUS_TOKEN"]
         # print("已获取并使用Env环境 PUSH_PLUS_TOKEN")
 # 获取企业微信应用推送 QYWX_AM
-if "QYWX_AM" in os.environ:
-    if len(os.environ["QYWX_AM"]) > 1:
-        QYWX_AM = os.environ["QYWX_AM"]
+if "QYWX_AM1" in os.environ:
+    if len(os.environ["QYWX_AM1"]) > 1:
+        QYWX_AM = os.environ["QYWX_AM1"]
 
 if "QYWX_KEY" in os.environ:
     if len(os.environ["QYWX_KEY"]) > 1:
@@ -355,7 +355,7 @@ class WeCom:
                         "author": "Author",
                         "content_source_url": "",
                         "content": message.replace('\n', '<br/>'),
-                        "digest": message
+                        "digest": message.replace('<p>', '').replace('</p>', '')
                     }
                 ]
             }
