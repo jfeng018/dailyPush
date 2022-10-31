@@ -196,7 +196,7 @@ if __name__ == '__main__':
     # print(get_oil_price())
     # print(get_holiday())
     # print(get_weather_icon("多云"))
-    sendNotifyUtils.send("叮咚🌊 今天提醒来喽", "<p>" + get_weather() + get_day_data() + get_holiday() + get_oil_price()+ "</p>")
+    sendNotifyUtils.send("叮咚🌊 今天提醒来喽", "<p>" + get_weather() + get_day_data() + get_oil_price()+ "</p>")
 
     # cur_path = os.path.abspath(os.path.dirname(__file__))
     # print(get_bing())
