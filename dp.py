@@ -11,6 +11,7 @@ birthday_h = ''
 birthday_m = ''
 tian_api_Key = ''
 
+
 if "love_date" in os.environ and os.environ["love_date"]:
     love_d = os.environ["love_date"]
 if "birthday_wife" in os.environ and os.environ["birthday_wife"]:
@@ -87,7 +88,7 @@ def get_days(birthday):
         birth_date = date((year + 1), birthday_month, birthday_day)
         birth_day = str(birth_date.__sub__(today)).split(" ")[0]
     elif today == year_date:
-        birth_day = 0
+        birth_day = '0'
     else:
         birth_date = year_date
         birth_day = str(birth_date.__sub__(today)).split(" ")[0]
