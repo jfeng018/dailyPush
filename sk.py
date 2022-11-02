@@ -13,7 +13,13 @@ import json
 import requests
 from time import sleep
 
-commond = "nohup /mnt/mmcblk2p4/sk/sk_linux_arm -token=equ8qp6b >./sk.txt 2>&1 &"
+
+token = ''
+
+if "sk_token" in os.environ and os.environ["sk_token"]:
+    token = os.environ["sk_token"]
+
+commond = "nohup /mnt/mmcblk2p4/sk/sk_linux_arm -token="+token+" >./sk.txt 2>&1 &"
 
 
 if __name__ == '__main__':
