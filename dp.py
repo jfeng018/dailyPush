@@ -11,7 +11,6 @@ birthday_h = ''
 birthday_m = ''
 tian_api_Key = ''
 
-
 if "love_date" in os.environ and os.environ["love_date"]:
     love_d = os.environ["love_date"]
 if "birthday_wife" in os.environ and os.environ["birthday_wife"]:
@@ -22,6 +21,11 @@ if "birthday_marry" in os.environ and os.environ["birthday_marry"]:
     birthday_m = os.environ["birthday_marry"]
 if "tian_api_Key" in os.environ and os.environ["tian_api_Key"]:
     tian_api_Key = os.environ["tian_api_Key"]
+if "hf_key" in os.environ and os.environ["hf_key"]:
+    hf_api_Key = os.environ["hf_key"]
+if "hf_city" in os.environ and os.environ["hf_city"]:
+    hf_city = os.environ["hf_city"]
+
 
 
 def get_oil_price():
@@ -95,44 +99,85 @@ def get_days(birthday):
     return birth_day
 
 
+url_api_weather = 'https://devapi.qweather.com/v7/weather/now?'  # 实时天气
+url_api_3dweather = 'https://devapi.qweather.com/v7/weather/3d?'  # 3天天气
+url_api_air = 'https://devapi.qweather.com/v7/air/now?'  # 实时空气质量
+
+
+def get_now_weather(City=hf_city, myKey=hf_api_Key):  # 实时天气
+    url = url_api_weather + City + myKey
+    return requests.get(url).json()
+
+
+def get_3day_weather(City=hf_city, myKey=hf_api_Key):  # 3天天气
+    url = url_api_3dweather + City + myKey
+    return requests.get(url).json()
+
+
+def get_air(City=hf_city, myKey=hf_api_Key):  # 空气质量
+    url = url_api_air + City + myKey
+    return requests.get(url).json()
+
+
+def get_hf_weather():
+    try:
+        CurrentWeather = get_now_weather(hf_city,hf_api_Key)
+        ThreeDayWeather = get_3day_weather(hf_city,hf_api_Key)
+        CurrentAirLevel = get_air(hf_city,hf_api_Key)
+        result ='当前温度:'+CurrentWeather['now']['temp'] + '℃~ 体感温度:'+CurrentWeather['now']['feelsLike']+'℃~\n天气状况:'+\
+                  CurrentWeather['now']['text'] +"\n"+'相对湿度:'+CurrentWeather['now']['humidity']+' 空气质量指数:'+CurrentAirLevel['now']['aqi']+"\n"+\
+                  '更新时间:'+CurrentWeather['updateTime']+"\n\n"+\
+                  ThreeDayWeather['daily'][0]['fxDate'] + ' ' + '温度:'+ThreeDayWeather['daily'][0]['tempMin'] + '℃~' +\
+                  ThreeDayWeather['daily'][0]['tempMax'] + '℃ 天气状况:'+ThreeDayWeather['daily'][0]['textDay']+"\n"+\
+                  ThreeDayWeather['daily'][1]['fxDate'] + ' ' + '温度:'+ThreeDayWeather['daily'][1]['tempMin'] + '℃~' +\
+                  ThreeDayWeather['daily'][1]['tempMax'] + '℃ 天气状况:'+ThreeDayWeather['daily'][1]['textDay']+"\n"+\
+                  ThreeDayWeather['daily'][2]['fxDate'] + ' ' + '温度:'+ThreeDayWeather['daily'][2]['tempMin']+ '℃~' +\
+                  ThreeDayWeather['daily'][2]['tempMax'] + '℃ 天气状况:'+ThreeDayWeather['daily'][2]['textDay'] +"\n\n"
+    except:
+        result = "暂未获取到天气信息\n\n"
+    return result
+
 def get_weather():
-    # https://docs.qq.com/sheet/DSk9STW5ta2lzRlhM?c=F5A0V0&tab=BB08J2
-    url = 'http://t.weather.sojson.com/api/weather/city/101110101'
-    header = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36'
-    }
-    rep = requests.get(url, headers=header)
-    rep.encoding = "utf-8"
-    weather = rep.text
-    weather = json.loads(weather)
+    try:
+        # https://docs.qq.com/sheet/DSk9STW5ta2lzRlhM?c=F5A0V0&tab=BB08J2
+        url = 'http://t.weather.sojson.com/api/weather/city/101110101'
+        header = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36'
+        }
+        rep = requests.get(url, headers=header)
+        rep.encoding = "utf-8"
+        weather = rep.text
+        weather = json.loads(weather)
 
-    time = weather['time']  # 时间
-    parent = weather['cityInfo']['parent']  # 所属城市
-    city = weather['cityInfo']['city']  # 城区
-    # updateTime = weather['cityInfo']['updateTime']  # 更新时间
-    shidu = weather['data']['shidu']  # 湿度
-    pm25 = weather['data']['pm25']  # PM2.5
-    quality = weather['data']['quality']  # 空气质量
-    wendu = weather['data']['wendu']  # 当前温度
-    ganmao = weather['data']['ganmao']  # 感冒提醒
-    low = weather['data']['forecast'][0]['low']  # 今日最低温
-    high = weather['data']['forecast'][0]['high']  # 今日最高温
-    week = weather['data']['forecast'][0]['week']  # 星期
-    fx = weather['data']['forecast'][0]['fx']  # 风向
-    fl = weather['data']['forecast'][0]['fl']  # 风力
-    wtype = weather['data']['forecast'][0]['type']  # 天气
+        time = weather['time']  # 时间
+        parent = weather['cityInfo']['parent']  # 所属城市
+        city = weather['cityInfo']['city']  # 城区
+        # updateTime = weather['cityInfo']['updateTime']  # 更新时间
+        shidu = weather['data']['shidu']  # 湿度
+        pm25 = weather['data']['pm25']  # PM2.5
+        quality = weather['data']['quality']  # 空气质量
+        wendu = weather['data']['wendu']  # 当前温度
+        ganmao = weather['data']['ganmao']  # 感冒提醒
+        low = weather['data']['forecast'][0]['low']  # 今日最低温
+        high = weather['data']['forecast'][0]['high']  # 今日最高温
+        week = weather['data']['forecast'][0]['week']  # 星期
+        fx = weather['data']['forecast'][0]['fx']  # 风向
+        fl = weather['data']['forecast'][0]['fl']  # 风力
+        wtype = weather['data']['forecast'][0]['type']  # 天气
 
-    yesterday_low = weather['data']['yesterday']['low']  # 今日最低温
-    yesterday_high = weather['data']['yesterday']['high']  # 今日最高温
-    yesterday_wtype = weather['data']['yesterday']['type']  # 天气
+        yesterday_low = weather['data']['yesterday']['low']  # 今日最低温
+        yesterday_high = weather['data']['yesterday']['high']  # 今日最高温
+        yesterday_wtype = weather['data']['yesterday']['type']  # 天气
 
-    # result = '【今日天气预报】' + '\n' \
-    #          + parent + city + "  " + time + "\n" \
-    result = "今日天气：" + get_weather_icon(wtype) + wtype + "," + low + "~" + high + "\n" \
-             + "昨日天气：" + get_weather_icon(
-        yesterday_wtype) + yesterday_wtype + "," + yesterday_low + "~" + yesterday_high + "\n" \
-             + "空气质量：" + quality + ",湿度->" + shidu + ",PM2.5->" + str(pm25) + "\n" \
-             + "感冒指数：" + ganmao + "\n\n"
+        # result = '【今日天气预报】' + '\n' \
+        #          + parent + city + "  " + time + "\n" \
+        result = "今日天气：" + get_weather_icon(wtype) + wtype + "," + low + "~" + high + "\n" \
+                 + "昨日天气：" + get_weather_icon(
+            yesterday_wtype) + yesterday_wtype + "," + yesterday_low + "~" + yesterday_high + "\n" \
+                 + "空气质量：" + quality + ",湿度->" + shidu + ",PM2.5->" + str(pm25) + "\n" \
+                 + "感冒指数：" + ganmao + "\n\n"
+    except:
+        result = get_hf_weather()
     return result
 
 
@@ -189,8 +234,8 @@ def get_bing():
     return f'< img src = "{imgUrl}" >'
 
 
-
 if __name__ == '__main__':
+    # print(get_hf_weather())
     # print(get_weather())
     # print(get_day_data())
     # print(get_oil_price())
