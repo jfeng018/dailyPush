@@ -10,6 +10,8 @@ birthday_w = ''
 birthday_h = ''
 birthday_m = ''
 tian_api_Key = ''
+gas_url = ''
+gas_param = ''
 
 if "love_date" in os.environ and os.environ["love_date"]:
     love_d = os.environ["love_date"]
@@ -25,8 +27,13 @@ if "hf_key" in os.environ and os.environ["hf_key"]:
     hf_api_Key = os.environ["hf_key"]
 if "hf_city" in os.environ and os.environ["hf_city"]:
     hf_city = os.environ["hf_city"]
+if "gas_url" in os.environ and os.environ["gas_url"]:
+    gas_url = os.environ["gas_url"]
+if "gas_param" in os.environ and os.environ["gas_param"]:
+    gas_param = os.environ["gas_param"]
 
 
+requests.DEFAULT_RETRIES = 5
 
 def get_oil_price():
     p92 = ""
@@ -36,7 +43,7 @@ def get_oil_price():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                       'Chrome/73.0.3683.75 Safari/537.36 '
     }
-    rep = requests.get(url, headers=header)
+    rep = requests.get(url, headers=header, verify=False)
     rep.encoding = "utf-8"
     oil = rep.text
     oil = json.loads(oil)
@@ -106,17 +113,17 @@ url_api_air = 'https://devapi.qweather.com/v7/air/now?'  # 实时空气质量
 
 def get_now_weather(City=hf_city, myKey=hf_api_Key):  # 实时天气
     url = url_api_weather + City + myKey
-    return requests.get(url).json()
+    return requests.get(url, verify=False).json()
 
 
 def get_3day_weather(City=hf_city, myKey=hf_api_Key):  # 3天天气
     url = url_api_3dweather + City + myKey
-    return requests.get(url).json()
+    return requests.get(url, verify=False).json()
 
 
 def get_air(City=hf_city, myKey=hf_api_Key):  # 空气质量
     url = url_api_air + City + myKey
-    return requests.get(url).json()
+    return requests.get(url, verify=False).json()
 
 
 def get_hf_weather():
@@ -144,7 +151,7 @@ def get_weather():
         header = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36'
         }
-        rep = requests.get(url, headers=header)
+        rep = requests.get(url, headers=header, verify=False)
         rep.encoding = "utf-8"
         weather = rep.text
         weather = json.loads(weather)
@@ -197,7 +204,7 @@ def get_holiday():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                       'Chrome/73.0.3683.75 Safari/537.36 '
     }
-    rep = requests.get(url, headers=header)
+    rep = requests.get(url, headers=header, verify=False)
     rep.encoding = "utf-8"
     Holiday = rep.text
     Holiday = json.loads(Holiday)
@@ -212,11 +219,46 @@ def get_chp():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                       'Chrome/73.0.3683.75 Safari/537.36 '
     }
-    rep = requests.get(url, headers=header)
+    rep = requests.get(url, headers=header, verify=False)
     rep.encoding = "utf-8"
     Holiday = rep.text
     chp = json.loads(Holiday)
     return chp['data']['text'] + '\n\n'
+
+
+def get_ges_info(gas_param=gas_param):
+    dataStr = '';
+    url = gas_url
+    header = {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 12; 22021211RC Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4343 MMWEBSDK/20221011'
+                      ' Mobile Safari/537.36 MMWEBID/8376 MicroMessenger/8.0.30.2260(0x28001E3B) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64',
+        'Content-Type': 'application/json'
+    }
+    gas_param = gas_param.split(',')
+    for w in gas_param:
+        data = '{"data":{"condition":"card_id = \''+w+'\'"}}'
+        payload = json.loads(data)
+        rep = requests.post(url, json=payload, headers=header, verify=False)
+        rep.encoding = "utf-8"
+        gas = rep.text
+        gar_info = json.loads(gas)
+        userid = gar_info[0]['f_userinfo_id']
+        insertDate = gar_info[0]['f_insert_date']
+        if userid == "122543":
+            dataStr += "️06"
+        elif userid == "122542":
+            dataStr += "gb05"
+        elif userid == "122538":
+            dataStr += "gb01"
+        elif userid == "122549":
+            dataStr += "ls06"
+        elif userid == "122537":
+            dataStr += "lx06"
+        jval = gar_info[0]['f_jval']
+        dataStr += "->ye:"+str(jval)+" time:"+insertDate+'\n'
+
+
+    return dataStr + '\n\n'
 
 
 def get_bing():
@@ -226,7 +268,7 @@ def get_bing():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                       'Chrome/73.0.3683.75 Safari/537.36 '
     }
-    rep = requests.get(url, headers=header)
+    rep = requests.get(url, headers=header, verify=False)
     rep.encoding = "utf-8"
     img = rep.text
     img = json.loads(img)
@@ -235,13 +277,14 @@ def get_bing():
 
 
 if __name__ == '__main__':
+    # print(get_ges_info())
     # print(get_hf_weather())
     # print(get_weather())
     # print(get_day_data())
     # print(get_oil_price())
     # print(get_holiday())
     # print(get_weather_icon("多云"))
-    sendNotifyUtils.send("叮咚🌊 今日提醒来喽", "<p>" + get_weather() + get_day_data() + get_oil_price()+ "</p>")
+    sendNotifyUtils.send("叮咚🌊 今日提醒来喽", "<p>" + get_weather() + get_day_data() + get_oil_price()+get_ges_info()+"</p>")
 
     # cur_path = os.path.abspath(os.path.dirname(__file__))
     # print(get_bing())
