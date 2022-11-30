@@ -4,6 +4,8 @@ from datetime import datetime, date
 from time import localtime
 import requests
 import sendNotifyUtils
+import urllib3
+urllib3.disable_warnings()# 等价于requests.packages.urllib3.disable_warnings()
 
 love_d = ''
 birthday_w = ''
