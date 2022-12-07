@@ -230,36 +230,37 @@ def get_chp():
 
 def get_ges_info(gas_param=gas_param):
     dataStr = '';
-    url = gas_url
-    header = {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 12; 22021211RC Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4343 MMWEBSDK/20221011'
-                      ' Mobile Safari/537.36 MMWEBID/8376 MicroMessenger/8.0.30.2260(0x28001E3B) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64',
-        'Content-Type': 'application/json'
-    }
-    gas_param = gas_param.split(',')
-    for w in gas_param:
-        data = '{"data":{"condition":"card_id = \''+w+'\'"}}'
-        payload = json.loads(data)
-        rep = requests.post(url, json=payload, headers=header, verify=False)
-        rep.encoding = "utf-8"
-        gas = rep.text
-        gar_info = json.loads(gas)
-        userid = gar_info[0]['f_userinfo_id']
-        insertDate = gar_info[0]['f_insert_date']
-        if userid == "122543":
-            dataStr += "️06"
-        elif userid == "122542":
-            dataStr += "gb05"
-        elif userid == "122538":
-            dataStr += "gb01"
-        elif userid == "122549":
-            dataStr += "ls06"
-        elif userid == "122537":
-            dataStr += "lx06"
-        jval = gar_info[0]['f_jval']
-        dataStr += "->ye:"+str(jval)+" time:"+insertDate+'\n'
-
-
+    try:
+        url = gas_url
+        header = {
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 12; 22021211RC Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4343 MMWEBSDK/20221011'
+                          ' Mobile Safari/537.36 MMWEBID/8376 MicroMessenger/8.0.30.2260(0x28001E3B) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64',
+            'Content-Type': 'application/json'
+        }
+        gas_param = gas_param.split(',')
+        for w in gas_param:
+            data = '{"data":{"condition":"card_id = \''+w+'\'"}}'
+            payload = json.loads(data)
+            rep = requests.post(url, json=payload, headers=header, verify=False)
+            rep.encoding = "utf-8"
+            gas = rep.text
+            gar_info = json.loads(gas)
+            userid = gar_info[0]['f_userinfo_id']
+            insertDate = gar_info[0]['f_insert_date']
+            if userid == "122543":
+                dataStr += "️06"
+            elif userid == "122542":
+                dataStr += "gb05"
+            elif userid == "122538":
+                dataStr += "gb01"
+            elif userid == "122549":
+                dataStr += "ls06"
+            elif userid == "122537":
+                dataStr += "lx06"
+            jval = gar_info[0]['f_jval']
+            dataStr += "->ye:"+str(jval)+" time:"+insertDate+'\n'
+    except:
+        dataStr = "x"
     return dataStr + '\n\n'
 
 
