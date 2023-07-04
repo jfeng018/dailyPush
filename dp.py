@@ -278,7 +278,7 @@ def get_bing():
     imgUrl = img['images'][0]['url']
     return f'< img src = "{imgUrl}" >'
 
-def get_next_13():
+def get_next_14():
     today = date.today()
     next_ = today + timedelta(days=15)
     next_ = next_.strftime("%Y-%m-%d")
@@ -292,7 +292,7 @@ if __name__ == '__main__':
     # print(get_oil_price())
     # print(get_holiday())
     # print(get_weather_icon("多云"))
-    sendNotifyUtils.send("叮咚🌊 今日提醒来喽", "<p>" +get_next_13()+ get_weather() + get_day_data() + get_oil_price()+get_ges_info()+"</p>")
+    sendNotifyUtils.send("叮咚🌊 今日提醒来喽", "<p>" +get_next_14()+ get_weather() + get_day_data() + get_oil_price()+get_ges_info()+"</p>")
 
     # cur_path = os.path.abspath(os.path.dirname(__file__))
     # print(get_bing())
