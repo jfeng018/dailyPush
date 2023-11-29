@@ -432,7 +432,7 @@ def send(title, content):
 
 
 def main():
-    send('title', 'content')
+    #send('title', 'content')
 
 
 if __name__ == '__main__':
