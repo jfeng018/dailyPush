@@ -239,7 +239,7 @@ def get_ges_info(gas_param=gas_param):
         }
         gas_param = gas_param.split(',')
         for w in gas_param:
-            data = '{"data":{"condition":"card_id = \''+w+'\'"}}'
+            data = '{"data":{"url":"getSellUserinfo","param":{"f_card_id":"'+w+'","f_open_id":"oL5ch0ooDGES_v3U4-CJllFlZaTk"}}}'
             payload = json.loads(data)
             rep = requests.post(url, json=payload, headers=header, verify=False)
             rep.encoding = "utf-8"
