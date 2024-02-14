@@ -282,7 +282,7 @@ def get_next_14():
     today = date.today()
     next_ = today + timedelta(days=15)
     next_ = next_.strftime("%Y-%m-%d")
-    return "明日开放号日期:"+next_+",请判断是否需要预约哦❤"+ "\n\n"
+    return "明日开放号日期:"+next_+",请判断是否需要预约"+ "\n\n"
 
 if __name__ == '__main__':
     # print(get_ges_info())
