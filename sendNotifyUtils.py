@@ -431,9 +431,9 @@ def send(title, content):
             print('此类推送方式不存在')
 
 
-def main():
-    send('title', 'content')
-
-
-if __name__ == '__main__':
-    main()
+# def main():
+#     send('title', 'content');
+#
+#
+# if __name__ == '__main__':
+#      main()
