@@ -5,7 +5,8 @@ from time import localtime
 import requests
 import sendNotifyUtils
 import urllib3
-urllib3.disable_warnings()# 等价于requests.packages.urllib3.disable_warnings()
+
+urllib3.disable_warnings()  # 等价于requests.packages.urllib3.disable_warnings()
 
 love_d = ''
 birthday_w = ''
@@ -34,8 +35,8 @@ if "gas_url" in os.environ and os.environ["gas_url"]:
 if "gas_param" in os.environ and os.environ["gas_param"]:
     gas_param = os.environ["gas_param"]
 
-
 requests.DEFAULT_RETRIES = 5
+
 
 def get_oil_price():
     p92 = ""
@@ -81,7 +82,7 @@ def get_day_data(love_date=love_d,
     result = "我们已经在一起" + love_days + "天了❤️\n" \
              + "距离老婆生日还有：" + birth_day_w + "天\n" \
              + "距离老公生日还有：" + birth_day_h + "天\n" \
-             + "距离结婚纪念日还有：" + birth_day_m + "天\n\n" + get_chp()
+             + "距离结婚纪念日还有：" + birth_day_m + "天\n"+get_birth() + get_chp()
 
     return result
 
@@ -130,21 +131,24 @@ def get_air(City=hf_city, myKey=hf_api_Key):  # 空气质量
 
 def get_hf_weather():
     try:
-        CurrentWeather = get_now_weather(hf_city,hf_api_Key)
-        ThreeDayWeather = get_3day_weather(hf_city,hf_api_Key)
-        CurrentAirLevel = get_air(hf_city,hf_api_Key)
-        result ='当前温度:'+CurrentWeather['now']['temp'] + '℃~ 体感温度:'+CurrentWeather['now']['feelsLike']+'℃~\n天气状况:'+\
-                  CurrentWeather['now']['text'] +"\n"+'相对湿度:'+CurrentWeather['now']['humidity']+' 空气质量指数:'+CurrentAirLevel['now']['aqi']+"\n"+\
-                  '更新时间:'+CurrentWeather['updateTime']+"\n\n"+\
-                  ThreeDayWeather['daily'][0]['fxDate'] + ' ' + '温度:'+ThreeDayWeather['daily'][0]['tempMin'] + '℃~' +\
-                  ThreeDayWeather['daily'][0]['tempMax'] + '℃ 天气状况:'+ThreeDayWeather['daily'][0]['textDay']+"\n"+\
-                  ThreeDayWeather['daily'][1]['fxDate'] + ' ' + '温度:'+ThreeDayWeather['daily'][1]['tempMin'] + '℃~' +\
-                  ThreeDayWeather['daily'][1]['tempMax'] + '℃ 天气状况:'+ThreeDayWeather['daily'][1]['textDay']+"\n"+\
-                  ThreeDayWeather['daily'][2]['fxDate'] + ' ' + '温度:'+ThreeDayWeather['daily'][2]['tempMin']+ '℃~' +\
-                  ThreeDayWeather['daily'][2]['tempMax'] + '℃ 天气状况:'+ThreeDayWeather['daily'][2]['textDay'] +"\n\n"
+        CurrentWeather = get_now_weather(hf_city, hf_api_Key)
+        ThreeDayWeather = get_3day_weather(hf_city, hf_api_Key)
+        CurrentAirLevel = get_air(hf_city, hf_api_Key)
+        result = '当前温度:' + CurrentWeather['now']['temp'] + '℃~ 体感温度:' + CurrentWeather['now'][
+            'feelsLike'] + '℃~\n天气状况:' + \
+                 CurrentWeather['now']['text'] + "\n" + '相对湿度:' + CurrentWeather['now']['humidity'] + ' 空气质量指数:' + \
+                 CurrentAirLevel['now']['aqi'] + "\n" + \
+                 '更新时间:' + CurrentWeather['updateTime'] + "\n\n" + \
+                 ThreeDayWeather['daily'][0]['fxDate'] + ' ' + '温度:' + ThreeDayWeather['daily'][0]['tempMin'] + '℃~' + \
+                 ThreeDayWeather['daily'][0]['tempMax'] + '℃ 天气状况:' + ThreeDayWeather['daily'][0]['textDay'] + "\n" + \
+                 ThreeDayWeather['daily'][1]['fxDate'] + ' ' + '温度:' + ThreeDayWeather['daily'][1]['tempMin'] + '℃~' + \
+                 ThreeDayWeather['daily'][1]['tempMax'] + '℃ 天气状况:' + ThreeDayWeather['daily'][1]['textDay'] + "\n" + \
+                 ThreeDayWeather['daily'][2]['fxDate'] + ' ' + '温度:' + ThreeDayWeather['daily'][2]['tempMin'] + '℃~' + \
+                 ThreeDayWeather['daily'][2]['tempMax'] + '℃ 天气状况:' + ThreeDayWeather['daily'][2]['textDay'] + "\n\n"
     except:
         result = "暂未获取到天气信息\n\n"
     return result
+
 
 def get_weather():
     try:
@@ -239,7 +243,7 @@ def get_ges_info(gas_param=gas_param):
         }
         gas_param = gas_param.split(',')
         for w in gas_param:
-            data = '{"data":{"url":"getSellUserinfo","param":{"f_card_id":"'+w+'","f_open_id":"oL5ch0ooDGES_v3U4-CJllFlZaTk"}}}'
+            data = '{"data":{"url":"getSellUserinfo","param":{"f_card_id":"' + w + '","f_open_id":"oL5ch0ooDGES_v3U4-CJllFlZaTk"}}}'
             payload = json.loads(data)
             rep = requests.post(url, json=payload, headers=header, verify=False)
             rep.encoding = "utf-8"
@@ -258,7 +262,7 @@ def get_ges_info(gas_param=gas_param):
             elif userid == "122537":
                 dataStr += "lx06"
             jval = gar_info[0]['f_jval']
-            dataStr += "->ye:"+str(jval)+" time:"+insertDate+'\n'
+            dataStr += "->ye:" + str(jval) + " time:" + insertDate + '\n'
     except:
         dataStr = "x"
     return dataStr + '\n\n'
@@ -278,13 +282,53 @@ def get_bing():
     imgUrl = img['images'][0]['url']
     return f'< img src = "{imgUrl}" >'
 
-def get_next_14():
-    today = date.today()
-    next_ = today + timedelta(days=15)
-    next_ = next_.strftime("%Y-%m-%d")
-    return "明日开放号日期:"+next_+",请判断是否需要预约"+ "\n\n"
+
+# def get_next_14():
+#     today = date.today()
+#     next_ = today + timedelta(days=15)
+#     next_ = next_.strftime("%Y-%m-%d")
+#     return "明日开放号日期:"+next_+",请判断是否需要预约"+ "\n\n"
+
+#  是否闰年
+def is_leap(year):
+    if year % 400 == 0 or year % 40 == 0 or year % 4 == 0:
+        return True
+    else:
+        return False
+
+
+month_days = {1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
+
+
+def minus_result(first_year, second_year):
+    y = first_year.year - second_year.year
+    m = first_year.month - second_year.month
+    d = first_year.day - second_year.day
+    if d < 0:
+        if second_year.month == 2:
+            if is_leap(second_year.year):
+                month_days[2] = 29
+        d += month_days[second_year.month]
+        m -= 1
+    if m < 0:
+        m += 12
+        y -= 1
+    if y == 0:
+        if m == 0:
+            return ('{}天'.format(d))
+        else:
+            return ('{}月{}天'.format(m, d))
+    else:
+        return ('{}岁{}月{}天'.format(y, m, d))
+
+def get_birth():
+    dotdot = datetime(2024, 2, 28)
+    t = datetime.today()
+    return "我今天:" + minus_result(t, dotdot) + "啦"+ "\n\n"
+
 
 if __name__ == '__main__':
+    print("叮咚🌊 今日提醒来喽", "<p>" + get_weather() + get_day_data() + get_oil_price()+"</p>")
     # print(get_ges_info())
     # print(get_hf_weather())
     # print(get_weather())
@@ -292,7 +336,7 @@ if __name__ == '__main__':
     # print(get_oil_price())
     # print(get_holiday())
     # print(get_weather_icon("多云"))
-    sendNotifyUtils.send("叮咚🌊 今日提醒来喽", "<p>" +get_next_14()+ get_weather() + get_day_data() + get_oil_price()+get_ges_info()+"</p>")
+    # sendNotifyUtils.send("叮咚🌊 今日提醒来喽", "<p>" + get_weather() + get_day_data() + get_oil_price()+get_ges_info()+"</p>")
 
     # cur_path = os.path.abspath(os.path.dirname(__file__))
     # print(get_bing())

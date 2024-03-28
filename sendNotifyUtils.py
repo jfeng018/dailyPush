@@ -253,7 +253,7 @@ def pushplus_bot(title, content):
         print(e)
 
 
-print("xxxxxxxxxxxx")
+# print("xxxxxxxxxxxx")
 
 
 def wecom_key(title, content):
