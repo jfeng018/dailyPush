@@ -328,7 +328,7 @@ def get_birth():
 
 
 if __name__ == '__main__':
-    print("叮咚🌊 今日提醒来喽", "<p>" + get_weather() + get_day_data() + get_oil_price()+"</p>")
+    # print("叮咚🌊 今日提醒来喽", "<p>" + get_weather() + get_day_data() + get_oil_price()+"</p>")
     # print(get_ges_info())
     # print(get_hf_weather())
     # print(get_weather())
@@ -336,7 +336,7 @@ if __name__ == '__main__':
     # print(get_oil_price())
     # print(get_holiday())
     # print(get_weather_icon("多云"))
-    # sendNotifyUtils.send("叮咚🌊 今日提醒来喽", "<p>" + get_weather() + get_day_data() + get_oil_price()+get_ges_info()+"</p>")
+    sendNotifyUtils.send("叮咚🌊 今日提醒来喽", "<p>" + get_weather() + get_day_data() + get_oil_price()+"</p>")
 
     # cur_path = os.path.abspath(os.path.dirname(__file__))
     # print(get_bing())
